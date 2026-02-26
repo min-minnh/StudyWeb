@@ -1,0 +1,31 @@
+steps:
+- name: 'openjdk:17'
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      apt update
+      apt install -y ant
+      ant clean
+      ant dist
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+    - compute
+    - scp
+    - dist/StudyWeb.war
+    - ubuntu@instance-20260222-144634:~
+    - --zone=asia-southeast1-a
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+    - compute
+    - ssh
+    - ubuntu@instance-20260222-144634
+    - --zone=asia-southeast1-a
+    - --
+    - |
+      sudo systemctl stop tomcat10
+      sudo rm -rf /var/lib/tomcat10/webapps/StudyWeb*
+      sudo mv ~/StudyWeb.war /var/lib/tomcat10/webapps/
+      sudo systemctl start tomcat10
