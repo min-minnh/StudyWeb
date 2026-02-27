@@ -1,19 +1,7 @@
 steps:
-# ======================
-# STEP 1: BUILD WAR FILE
-# ======================
-- name: 'eclipse-temurin:17'
-  entrypoint: bash
-  args:
-    - -c
-    - |
-      apt update
-      apt install -y ant
-      ant -noinput -buildfile build.xml clean dist
-
-# ======================
-# STEP 2: COPY WAR TO VM
-# ======================
+# =========================
+# STEP 1: COPY WAR TO VM
+# =========================
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
     - compute
@@ -22,9 +10,9 @@ steps:
     - ubuntu@instance-20260222-144634:~
     - --zone=asia-southeast1-a
 
-# ======================
-# STEP 3: DEPLOY & RESTART TOMCAT
-# ======================
+# =========================
+# STEP 2: DEPLOY & RESTART TOMCAT
+# =========================
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
     - compute
