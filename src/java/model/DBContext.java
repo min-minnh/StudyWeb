@@ -21,7 +21,7 @@ public class DBContext {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 }
