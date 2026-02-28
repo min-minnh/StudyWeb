@@ -22,8 +22,8 @@ steps:
     - --
     - |
       sudo systemctl stop tomcat10
-      sudo rm -rf /var/lib/tomcat10/webapps/StudyWeb*
-      sudo mv ~/StudyWeb.war /var/lib/tomcat10/webapps/
+      sudo rm -rf /var/lib/tomcat10/webapps/ROOT*
+      sudo mv ~/StudyWeb.war /var/lib/tomcat10/webapps/ROOT.war
       sudo systemctl start tomcat10
 
 options:
