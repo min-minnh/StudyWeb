@@ -333,8 +333,8 @@ button:hover{
             <input type="hidden" name="topicId" value="${topicId}" />
             <input type="text" name="title" placeholder="Lesson title..." required />
             <textarea name="content" placeholder="Write lesson content..."></textarea>
-            <label class="file-label"><i class="fa-solid fa-file-pdf"></i> Upload PDF Document:</label>
-            <input type="file" name="file" accept="application/pdf" />
+            <label class="file-label"><i class="fa-solid fa-file-pdf"></i> Upload Document:</label>
+            <input type="file" name="file" accept=".pdf,.doc,.docx" />
             <button type="submit">
                 <i class="fa-solid fa-upload"></i> Save Lesson
             </button>
