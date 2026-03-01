@@ -1,8 +1,6 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Study Web - Login</title>
 
 <link rel="stylesheet"
@@ -17,12 +15,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 }
 
 body{
-    height:100vh;
+    min-height:100vh;
     display:flex;
     background:linear-gradient(135deg,#dbeafe,#eff6ff);
 }
 
-/* LEFT SIDE */
+/* ===== LEFT SIDE ===== */
 .left-panel{
     width:45%;
     background:linear-gradient(160deg,#60a5fa,#3b82f6);
@@ -32,25 +30,24 @@ body{
     justify-content:center;
     align-items:center;
     text-align:center;
-    padding:60px;
+    padding:60px 40px;
     position:relative;
     overflow:hidden;
 }
 
-/* glowing circle decor */
 .left-panel::before{
     content:"";
     position:absolute;
-    width:400px;
-    height:400px;
+    width:350px;
+    height:350px;
     background:rgba(255,255,255,0.1);
     border-radius:50%;
-    top:-120px;
-    right:-120px;
+    top:-100px;
+    right:-100px;
 }
 
 .left-panel h1{
-    font-size:36px;
+    font-size:32px;
     font-weight:700;
     margin-bottom:10px;
 }
@@ -59,48 +56,49 @@ body{
     opacity:0.9;
 }
 
-/* COUNTDOWN */
+/* Countdown */
 .countdown-box{
-    margin-top:35px;
+    margin-top:30px;
     background:rgba(255,255,255,0.15);
     backdrop-filter:blur(12px);
-    padding:30px 45px;
-    border-radius:30px;
+    padding:25px 35px;
+    border-radius:25px;
     box-shadow:0 15px 40px rgba(0,0,0,0.15);
 }
 
 .countdown-days{
-    font-size:56px;
+    font-size:50px;
     font-weight:800;
-    letter-spacing:2px;
 }
 
 .countdown-sub{
     font-size:14px;
-    margin-top:8px;
+    margin-top:6px;
 }
 
 .motivation{
-    margin-top:30px;
+    margin-top:25px;
     max-width:320px;
-    font-size:16px;
+    font-size:15px;
     line-height:1.6;
 }
 
-/* RIGHT SIDE */
+/* ===== RIGHT SIDE ===== */
 .right-panel{
     flex:1;
     display:flex;
     justify-content:center;
     align-items:center;
+    padding:20px;
 }
 
-/* VIP CARD */
+/* Login Box */
 .login-box{
-    width:400px;
-    padding:50px 40px;
-    border-radius:30px;
-    background:rgba(255,255,255,0.8);
+    width:420px;
+    max-width:100%;
+    padding:45px 35px;
+    border-radius:28px;
+    background:rgba(255,255,255,0.85);
     backdrop-filter:blur(15px);
     box-shadow:0 25px 60px rgba(59,130,246,0.25);
     transition:0.4s;
@@ -113,14 +111,14 @@ body{
 
 .login-box h2{
     text-align:center;
-    margin-bottom:35px;
+    margin-bottom:30px;
     color:#1e40af;
-    font-size:24px;
+    font-size:22px;
 }
 
-/* INPUT */
+/* Input */
 .input-group{
-    margin-bottom:22px;
+    margin-bottom:20px;
 }
 
 .input-group label{
@@ -143,7 +141,7 @@ body{
     box-shadow:0 0 10px rgba(59,130,246,0.4);
 }
 
-/* BUTTON */
+/* Button */
 .login-btn{
     width:100%;
     padding:14px;
@@ -164,14 +162,71 @@ body{
 
 .footer-text{
     text-align:center;
-    margin-top:18px;
+    margin-top:15px;
     font-size:12px;
     color:#64748b;
 }
 
-@media(max-width:900px){
+/* ===== Tablet ===== */
+@media(max-width:1024px){
     .left-panel{
-        display:none;
+        width:50%;
+        padding:40px 25px;
+    }
+
+    .countdown-days{
+        font-size:42px;
+    }
+}
+
+/* ===== Mobile ===== */
+@media(max-width:900px){
+    body{
+        flex-direction:column;
+    }
+
+    .left-panel{
+        width:100%;
+        padding:35px 20px;
+        min-height:280px;
+    }
+
+    .countdown-box{
+        padding:18px 25px;
+    }
+
+    .countdown-days{
+        font-size:36px;
+    }
+
+    .motivation{
+        font-size:14px;
+    }
+
+    .right-panel{
+        width:100%;
+        padding:25px 15px;
+    }
+
+    .login-box{
+        width:100%;
+        padding:35px 25px;
+        border-radius:24px;
+    }
+
+    .login-box h2{
+        font-size:20px;
+    }
+}
+
+/* ===== Small phone ===== */
+@media(max-width:480px){
+    .countdown-days{
+        font-size:30px;
+    }
+
+    .login-btn{
+        font-size:14px;
     }
 }
 </style>
@@ -181,7 +236,7 @@ body{
 
 <div class="left-panel">
     <h1><i class="fa-solid fa-graduation-cap"></i> Study Web</h1>
-    <p>Final Exam • May 26, 2026</p>
+    <p>Final Exam ? May 26, 2026</p>
 
     <div class="countdown-box">
         <div id="days" class="countdown-days"></div>
@@ -213,7 +268,7 @@ body{
             <input type="submit" value="Login" class="login-btn">
 
             <div class="footer-text">
-                Study Web © 2025
+                Study Web � 2025
             </div>
         </form>
     </div>

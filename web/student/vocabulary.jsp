@@ -15,162 +15,42 @@ if (user == null || !user.getRole().equals("student")) {
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vocabulary Topics</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<!--<style>
-body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    display:flex;
-    height:100vh;
-    background:linear-gradient(135deg,#eef2ff,#fdf2f8);
-}
-
-/* SIDEBAR */
-.sidebar{
-    width:240px;
-    background:linear-gradient(180deg,#6366f1,#3b82f6);
-    color:white;
-    padding-top:20px;
-}
-
-.sidebar h3{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.sidebar a{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:14px 22px;
-    color:white;
-    text-decoration:none;
-    transition:0.3s;
-}
-
-.sidebar a:hover{
-    background:rgba(255,255,255,0.15);
-    padding-left:28px;
-}
-
-.active{
-    background:rgba(255,255,255,0.18);
-}
-
-/* CONTENT */
-.content{
-    flex:1;
-    padding:60px;
-    overflow-y:auto;
-}
-
-.page-header h2{
-    margin:0;
-    font-size:30px;
-}
-
-.page-header p{
-    margin-top:10px;
-    color:#6b7280;
-}
-
-/* GRID */
-.topic-grid{
-    margin-top:50px;
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-    gap:35px;
-}
-
-/* CARD */
-.topic-card{
-    position:relative;
-    background:white;
-    padding:40px;
-    border-radius:25px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.08);
-    transition:0.3s;
-    text-align:center;
-    overflow:hidden;
-}
-
-.topic-card::before{
-    content:"";
-    position:absolute;
-    width:120px;
-    height:120px;
-    background:radial-gradient(circle,#6366f130,transparent);
-    top:-40px;
-    right:-40px;
-    border-radius:50%;
-}
-
-.topic-card:hover{
-    transform:translateY(-10px);
-    box-shadow:0 30px 60px rgba(0,0,0,0.15);
-}
-
-.topic-card i{
-    font-size:36px;
-    color:#6366f1;
-    margin-bottom:20px;
-}
-
-.topic-card h3{
-    margin:15px 0;
-    font-size:22px;
-}
-
-.topic-card a{
-    display:inline-block;
-    margin-top:20px;
-    padding:10px 22px;
-    border-radius:12px;
-    background:#6366f1;
-    color:white;
-    text-decoration:none;
-    font-weight:600;
-    transition:0.2s;
-}
-
-.topic-card a:hover{
-    background:#4f46e5;
-    box-shadow:0 10px 20px rgba(99,102,241,0.3);
-}
-
-.empty{
-    background:white;
-    padding:50px;
-    border-radius:20px;
-    text-align:center;
-    box-shadow:0 15px 35px rgba(0,0,0,0.08);
-}
-</style>-->
 <style>
+*{box-sizing:border-box;margin:0;padding:0;}
+
 body{
-    margin:0;
     font-family:'Segoe UI',Arial,sans-serif;
-    display:flex;
-    height:100vh;
     background:#f0f7ff;
+    display:flex;
+    min-height:100vh;
 }
 
-/* SIDEBAR */
+/* ========== SIDEBAR ========== */
 .sidebar{
     width:240px;
+    min-height:100vh;
     background:linear-gradient(180deg,#93c5fd,#60a5fa);
     color:white;
     padding-top:25px;
+    flex-shrink:0;
+    position:fixed;
+    top:0; left:0;
+    height:100%;
+    overflow-y:auto;
+    z-index:200;
+    transition:transform 0.3s;
 }
 
 .sidebar h3{
     text-align:center;
     margin-bottom:35px;
     font-weight:700;
+    font-size:18px;
 }
 
 .sidebar a{
@@ -183,6 +63,7 @@ body{
     transition:0.3s;
     border-radius:8px;
     margin:4px 12px;
+    font-size:15px;
 }
 
 .sidebar a:hover{
@@ -190,72 +71,95 @@ body{
     transform:translateX(6px);
 }
 
-.active{
-    background:rgba(255,255,255,0.35);
+.active{background:rgba(255,255,255,0.35);}
+
+/* ========== TOPBAR ========== */
+.topbar{
+    display:none;
+    position:fixed;
+    top:0; left:0; right:0;
+    height:56px;
+    background:linear-gradient(90deg,#60a5fa,#93c5fd);
+    color:white;
+    align-items:center;
+    padding:0 16px;
+    gap:14px;
+    z-index:300;
 }
 
-/* CONTENT */
+.topbar span{font-weight:700;font-size:17px;}
+
+.menu-btn{
+    background:none;
+    border:none;
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+    padding:4px 8px;
+}
+
+.overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.4);
+    z-index:150;
+}
+.overlay.show{display:block;}
+
+/* ========== CONTENT ========== */
 .content{
     flex:1;
-    padding:50px;
+    margin-left:240px;
+    padding:40px;
     overflow-y:auto;
 }
 
-/* HEADER */
 .page-header{
-    margin-bottom:40px;
+    margin-bottom:30px;
 }
 
 .page-header h2{
-    margin:0;
-    font-size:28px;
+    font-size:clamp(20px,3vw,28px);
     color:#1e3a8a;
 }
 
 .page-header p{
     margin-top:8px;
     color:#475569;
+    font-size:15px;
 }
 
-/* GRID */
+/* ========== GRID ========== */
 .topic-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-    gap:30px;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:22px;
 }
 
-/* CARD */
+/* ========== CARD ========== */
 .topic-card{
     background:white;
-    padding:35px;
-    border-radius:25px;
-    box-shadow:0 20px 40px rgba(59,130,246,0.15);
+    padding:28px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(59,130,246,0.12);
     transition:0.3s;
     position:relative;
     overflow:hidden;
 }
 
 .topic-card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 25px 50px rgba(59,130,246,0.25);
+    transform:translateY(-6px);
+    box-shadow:0 20px 40px rgba(59,130,246,0.2);
 }
 
-/* subtle background circle */
 .topic-card::after{
     content:"";
     position:absolute;
-    width:120px;
-    height:120px;
-    background:rgba(59,130,246,0.08);
+    width:100px; height:100px;
+    background:rgba(59,130,246,0.07);
     border-radius:50%;
-    top:-40px;
-    right:-40px;
-}
-
-.topic-card h3{
-    margin:0 0 12px 0;
-    font-size:20px;
-    color:#1e40af;
+    top:-30px; right:-30px;
 }
 
 .topic-card i{
@@ -264,77 +168,119 @@ body{
     margin-bottom:10px;
 }
 
+.topic-card h3{
+    font-size:18px;
+    color:#1e40af;
+    margin-bottom:14px;
+    line-height:1.4;
+}
+
+.btn-row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
 .topic-card a{
-    display:inline-block;
-    margin-top:15px;
-    padding:8px 18px;
-    border-radius:20px;
+    flex:1;
+    min-width:100px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    padding:8px 12px;
+    border-radius:16px;
     background:#dbeafe;
     color:#1e3a8a;
     font-weight:600;
     text-decoration:none;
     transition:0.3s;
+    font-size:13px;
+    text-align:center;
 }
 
-.topic-card a:hover{
-    background:#bfdbfe;
+.topic-card a:hover{background:#bfdbfe;}
+
+.topic-card a.test{
+    background:#ede9fe;
+    color:#5b21b6;
 }
 
-/* EMPTY */
+.topic-card a.test:hover{background:#ddd6fe;}
+
+/* ========== EMPTY ========== */
 .empty{
     background:white;
     padding:40px;
-    border-radius:25px;
+    border-radius:20px;
     text-align:center;
-    box-shadow:0 15px 30px rgba(0,0,0,0.08);
+    box-shadow:0 10px 25px rgba(0,0,0,0.07);
     color:#64748b;
+}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:768px){
+    .topbar{display:flex;}
+
+    .sidebar{
+        transform:translateX(-100%);
+        padding-top:70px;
+    }
+
+    .sidebar.open{transform:translateX(0);}
+
+    .content{
+        margin-left:0;
+        padding:75px 16px 30px;
+    }
+
+    .topic-grid{grid-template-columns:1fr 1fr;}
+}
+
+@media(max-width:480px){
+    .topic-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-    <h3><i class="fa-solid fa-user-graduate"></i> Student</h3>
-
-    <a href="dashboard.jsp">
-        <i class="fa-solid fa-house"></i> Dashboard
-    </a>
-
-    <a href="vocabulary" class="active">
-        <i class="fa-solid fa-book"></i> Vocabulary
-    </a>
-
-    <a href="theory">
-        <i class="fa-solid fa-book-open"></i> Theory
-    </a>
-
-    <a href="../logout">
-        <i class="fa-solid fa-right-from-bracket"></i> Logout
-    </a>
+<!-- Topbar mobile -->
+<div class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    <span><i class="fa-solid fa-book"></i> Vocabulary</span>
 </div>
 
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <h3><i class="fa-solid fa-user-graduate"></i> Student</h3>
+    <a href="dashboard.jsp"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="vocabulary" class="active"><i class="fa-solid fa-book"></i> Vocabulary</a>
+    <a href="theory"><i class="fa-solid fa-book-open"></i> Theory</a>
+    <a href="../logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</div>
+
+<!-- Content -->
 <div class="content">
 
-<div class="page-header">
-    <h2><i class="fa-solid fa-layer-group"></i> Vocabulary Topics</h2>
-    <p>Pick a topic and start mastering new words 🚀</p>
-</div>
+    <div class="page-header">
+        <h2><i class="fa-solid fa-layer-group"></i> Vocabulary Topics</h2>
+        <p>Pick a topic and start mastering new words 🚀</p>
+    </div>
 
-<%
-List<Topic> topics =
-    (List<Topic>) request.getAttribute("topics");
+    <%
+    List<Topic> topics = (List<Topic>) request.getAttribute("topics");
+    if (topics != null && !topics.isEmpty()) {
+    %>
 
-if (topics != null && !topics.isEmpty()) {
-%>
-
-<div class="topic-grid">
-
-<%
-for (Topic t : topics) {
-%>
-
-<div class="topic-card">
+    <div class="topic-grid">
+    <% for (Topic t : topics) { %>
+       <div class="topic-card">
     <i class="fa-solid fa-brain"></i>
     <h3><%= t.getName() %></h3>
 
@@ -342,26 +288,26 @@ for (Topic t : topics) {
         Start Learning
     </a>
 </div>
+    <% } %>
+    </div>
 
-<%
+    <% } else { %>
+
+    <div class="empty">
+        <i class="fa-regular fa-folder-open" style="font-size:28px;margin-bottom:10px;display:block;"></i>
+        <p>No vocabulary topics available yet.</p>
+    </div>
+
+    <% } %>
+
+</div>
+
+<script>
+function toggleSidebar(){
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlay").classList.toggle("show");
 }
-%>
-
-</div>
-
-<%
-} else {
-%>
-
-<div class="empty">
-    No vocabulary topics available yet.
-</div>
-
-<%
-}
-%>
-
-</div>
+</script>
 
 </body>
 </html>

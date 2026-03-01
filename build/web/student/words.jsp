@@ -1,59 +1,56 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page session="true" %>
-
-<%
-model.User user = (model.User) session.getAttribute("user");
-if (user == null || !user.getRole().equals("student")) {
-    response.sendRedirect("../login");
-    return;
-}
-
-String topicId = request.getParameter("topic");
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Choose Mode</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<%
+String topicId = request.getParameter("topic");
+if(topicId == null){
+    topicId = "";
+}
+%>
 <style>
 body{
     margin:0;
     font-family:'Segoe UI',sans-serif;
-    height:100vh;
+    min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     background:linear-gradient(135deg,#dbeafe,#bfdbfe);
+    padding:20px;
 }
 
 /* Container */
 .container{
     text-align:center;
+    width:100%;
+    max-width:1000px;
 }
 
 /* Title */
 h2{
     font-size:32px;
-    margin-bottom:50px;
+    margin-bottom:40px;
     color:#1e3a8a;
 }
 
 /* Cards */
 .mode-wrapper{
     display:flex;
-    gap:50px;
+    gap:40px;
     justify-content:center;
+    flex-wrap:wrap;
 }
 
 .card{
     background:white;
-    padding:55px;
-    width:300px;
+    padding:40px;
+    width:320px;
+    max-width:90%;
     border-radius:28px;
     box-shadow:0 20px 40px rgba(0,0,0,0.1);
     transition:0.3s;
@@ -84,7 +81,7 @@ h2{
 .card a{
     display:inline-block;
     margin-top:20px;
-    padding:10px 26px;
+    padding:12px 28px;
     border-radius:25px;
     background:#3b82f6;
     color:white;
@@ -104,8 +101,8 @@ h2{
     display:inline-flex;
     align-items:center;
     gap:8px;
-    margin-top:50px;
-    padding:10px 24px;
+    margin-top:40px;
+    padding:12px 26px;
     border-radius:30px;
     background:white;
     color:#1e3a8a;
@@ -120,21 +117,57 @@ h2{
     transform:translateY(-3px);
     box-shadow:0 15px 30px rgba(0,0,0,0.15);
 }
+
+/* ===== Mobile ===== */
+@media (max-width: 768px){
+
+    h2{
+        font-size:24px;
+        margin-bottom:25px;
+    }
+
+    .mode-wrapper{
+        flex-direction:column;
+        gap:20px;
+    }
+
+    .card{
+        width:100%;
+        padding:30px 20px;
+    }
+
+    .card i{
+        font-size:36px;
+    }
+
+    .card h3{
+        font-size:18px;
+    }
+
+    .card p{
+        font-size:13px;
+    }
+
+    .back{
+        margin-top:30px;
+        font-size:14px;
+        padding:10px 20px;
+    }
+}
 </style>
 </head>
-
 <body>
 
 <div class="container">
 
-<h2>💙 Choose Your Mode</h2>
+<h2>? Choose Your Mode</h2>
 
 <div class="mode-wrapper">
 
 <div class="card">
     <i class="fa-solid fa-layer-group"></i>
     <h3>Study Mode</h3>
-    <p>Flip flashcards and remember faster 🚀</p>
+    <p>Flip flashcards and remember faster ?</p>
     <a href="vocabulary?topic=<%= topicId %>&mode=study">
         Start Study
     </a>
@@ -143,7 +176,7 @@ h2{
 <div class="card">
     <i class="fa-solid fa-bolt"></i>
     <h3>Test Mode</h3>
-    <p>Challenge yourself and level up 💪</p>
+    <p>Challenge yourself and level up ?</p>
     <a href="vocabulary?topic=<%= topicId %>&mode=inputTest">
         Start Test
     </a>

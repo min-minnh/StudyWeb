@@ -10,228 +10,325 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Admin Dashboard</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Dashboard</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<style>
-body{
-    margin:0;
-    font-family:'Segoe UI',Arial,sans-serif;
-    display:flex;
-    height:100vh;
-    background:#f3f8ff;
-}
+        <style>
+            *{
+                box-sizing:border-box;
+                margin:0;
+                padding:0;
+            }
 
-/* SIDEBAR */
-.sidebar{
-    width:240px;
-    background:linear-gradient(180deg,#1e293b,#334155);
-    color:white;
-    padding-top:25px;
-}
+            body{
+                font-family:'Segoe UI',Arial,sans-serif;
+                background:#f3f8ff;
+                display:flex;
+                min-height:100vh;
+            }
 
-.sidebar h3{
-    text-align:center;
-    margin-bottom:35px;
-    font-weight:700;
-    letter-spacing:0.5px;
-}
+            /* ========== SIDEBAR ========== */
+            .sidebar{
+                width:240px;
+                min-height:100vh;
+                background:linear-gradient(180deg,#1e293b,#334155);
+                color:white;
+                padding-top:25px;
+                flex-shrink:0;
+                transition:transform 0.3s;
+                position:fixed;
+                top:0;
+                left:0;
+                z-index:200;
+                height:100%;
+                overflow-y:auto;
+            }
 
-.sidebar a{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:14px 22px;
-    color:white;
-    text-decoration:none;
-    transition:0.3s;
-    border-radius:8px;
-    margin:4px 12px;
-}
+            .sidebar h3{
+                text-align:center;
+                margin-bottom:35px;
+                font-weight:700;
+                letter-spacing:0.5px;
+                font-size:18px;
+            }
 
-.sidebar a:hover{
-    background:rgba(255,255,255,0.15);
-    transform:translateX(6px);
-}
+            .sidebar a{
+                display:flex;
+                align-items:center;
+                gap:12px;
+                padding:14px 22px;
+                color:white;
+                text-decoration:none;
+                transition:0.3s;
+                border-radius:8px;
+                margin:4px 12px;
+                font-size:15px;
+            }
 
-.active{
-    background:rgba(255,255,255,0.25);
-}
+            .sidebar a:hover{
+                background:rgba(255,255,255,0.15);
+                transform:translateX(6px);
+            }
 
-/* CONTENT */
-.content{
-    flex:1;
-    padding:50px;
-    overflow-y:auto;
-}
+            .active{
+                background:rgba(255,255,255,0.25);
+            }
 
-/* HERO */
-.hero{
-    background:white;
-    padding:40px;
-    border-radius:25px;
-    box-shadow:0 20px 40px rgba(59,130,246,0.12);
-    margin-bottom:50px;
-    position:relative;
-    overflow:hidden;
-}
+            /* ========== TOPBAR (mobile) ========== */
+            .topbar{
+                display:none;
+                position:fixed;
+                top:0;
+                left:0;
+                right:0;
+                height:56px;
+                background:linear-gradient(90deg,#1e293b,#334155);
+                color:white;
+                align-items:center;
+                padding:0 16px;
+                z-index:300;
+                gap:14px;
+            }
 
-.hero::after{
-    content:"";
-    position:absolute;
-    width:180px;
-    height:180px;
-    background:rgba(59,130,246,0.08);
-    border-radius:50%;
-    top:-60px;
-    right:-60px;
-}
+            .topbar span{
+                font-weight:700;
+                font-size:17px;
+            }
 
-.hero h2{
-    margin:0;
-    font-size:28px;
-    color:#1e3a8a;
-}
+            .menu-btn{
+                background:none;
+                border:none;
+                color:white;
+                font-size:22px;
+                cursor:pointer;
+                padding:4px 8px;
+            }
 
-.hero p{
-    margin-top:8px;
-    color:#475569;
-}
+            /* Overlay khi sidebar mở trên mobile */
+            .overlay{
+                display:none;
+                position:fixed;
+                inset:0;
+                background:rgba(0,0,0,0.4);
+                z-index:150;
+            }
 
-/* CARDS */
-.cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-    gap:35px;
-}
+            .overlay.show{
+                display:block;
+            }
 
-.card-item{
-    background:white;
-    padding:35px;
-    border-radius:25px;
-    box-shadow:0 20px 40px rgba(59,130,246,0.12);
-    transition:0.3s;
-    position:relative;
-    overflow:hidden;
-}
+            /* ========== CONTENT ========== */
+            .content{
+                flex:1;
+                margin-left:240px;
+                padding:40px;
+                overflow-y:auto;
+            }
 
-.card-item:hover{
-    transform:translateY(-8px);
-    box-shadow:0 25px 50px rgba(59,130,246,0.22);
-}
+            /* ========== HERO ========== */
+            .hero{
+                background:white;
+                padding:35px;
+                border-radius:20px;
+                box-shadow:0 10px 30px rgba(59,130,246,0.1);
+                margin-bottom:40px;
+                position:relative;
+                overflow:hidden;
+            }
 
-.card-item::after{
-    content:"";
-    position:absolute;
-    width:120px;
-    height:120px;
-    background:rgba(59,130,246,0.08);
-    border-radius:50%;
-    top:-40px;
-    right:-40px;
-}
+            .hero::after{
+                content:"";
+                position:absolute;
+                width:160px;
+                height:160px;
+                background:rgba(59,130,246,0.07);
+                border-radius:50%;
+                top:-50px;
+                right:-50px;
+            }
 
-.card-item i{
-    font-size:28px;
-    color:#3b82f6;
-    margin-bottom:15px;
-}
+            .hero h2{
+                font-size:clamp(20px,3vw,28px);
+                color:#1e3a8a;
+            }
 
-.card-item h3{
-    margin:0 0 10px 0;
-    font-size:20px;
-    color:#1e40af;
-}
+            .hero p{
+                margin-top:8px;
+                color:#475569;
+                font-size:15px;
+            }
 
-.card-item p{
-    color:#64748b;
-}
+            /* ========== CARDS ========== */
+            .cards{
+                display:grid;
+                grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+                gap:25px;
+            }
 
-.card-item a{
-    display:inline-block;
-    margin-top:18px;
-    padding:8px 18px;
-    border-radius:20px;
-    background:#dbeafe;
-    color:#1e3a8a;
-    font-weight:600;
-    text-decoration:none;
-    transition:0.3s;
-}
+            .card-item{
+                background:white;
+                padding:30px;
+                border-radius:20px;
+                box-shadow:0 10px 30px rgba(59,130,246,0.1);
+                transition:0.3s;
+                position:relative;
+                overflow:hidden;
+            }
 
-.card-item a:hover{
-    background:#bfdbfe;
-}
-</style>
-</head>
+            .card-item:hover{
+                transform:translateY(-6px);
+                box-shadow:0 20px 40px rgba(59,130,246,0.18);
+            }
 
-<body>
+            .card-item::after{
+                content:"";
+                position:absolute;
+                width:100px;
+                height:100px;
+                background:rgba(59,130,246,0.07);
+                border-radius:50%;
+                top:-30px;
+                right:-30px;
+            }
 
-<div class="sidebar">
-    <h3><i class="fa-solid fa-user-shield"></i> Admin</h3>
+            .card-item i{
+                font-size:26px;
+                color:#3b82f6;
+                margin-bottom:12px;
+            }
+            .card-item h3{
+                font-size:18px;
+                color:#1e40af;
+                margin-bottom:8px;
+            }
+            .card-item p{
+                color:#64748b;
+                font-size:14px;
+                line-height:1.6;
+            }
 
-    <a href="dashboard.jsp" class="active">
-        <i class="fa-solid fa-house"></i> Dashboard
-    </a>
+            .card-item a{
+                display:inline-block;
+                margin-top:16px;
+                padding:8px 18px;
+                border-radius:20px;
+                background:#dbeafe;
+                color:#1e3a8a;
+                font-weight:600;
+                text-decoration:none;
+                transition:0.3s;
+                font-size:14px;
+            }
 
-    <a href="vocabulary">
-        <i class="fa-solid fa-book"></i> Vocabulary
-    </a>
+            .card-item a:hover{
+                background:#bfdbfe;
+            }
 
-    <a href="theory">
-        <i class="fa-solid fa-book-open"></i> Theory
-    </a>
+            /* ========== RESPONSIVE ========== */
+            @media(max-width:768px){
+                .topbar{
+                    display:flex;
+                }
 
-    <a href="#">
-        <i class="fa-solid fa-pen"></i> Exercise
-    </a>
+                .sidebar{
+                    transform:translateX(-100%);
+                    padding-top:70px;
+                }
 
-    <a href="#">
-        <i class="fa-solid fa-chart-column"></i> Result
-    </a>
+                .sidebar.open{
+                    transform:translateX(0);
+                }
 
-    <a href="../logout">
-        <i class="fa-solid fa-right-from-bracket"></i> Logout
-    </a>
-</div>
+                .content{
+                    margin-left:0;
+                    padding:80px 16px 30px;
+                }
 
-<div class="content">
+                .cards{
+                    grid-template-columns:1fr;
+                }
+            }
+        </style>
+    </head>
 
-    <div class="hero">
-        <h2><i class="fa-solid fa-crown"></i> Welcome, Admin ${sessionScope.user.username}</h2>
-        <p>Manage lessons, control content and keep the system running smoothly.</p>
-    </div>
+    <body>
 
-    <div class="cards">
-
-        <div class="card-item">
-            <i class="fa-solid fa-book"></i>
-            <h3>Manage Vocabulary</h3>
-            <p>Create, edit and organize vocabulary topics efficiently.</p>
-            <a href="vocabulary">Manage →</a>
+        <!-- Topbar mobile -->
+        <div class="topbar">
+            <button class="menu-btn" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <span><i class="fa-solid fa-user-shield"></i> Admin</span>
         </div>
 
-        <div class="card-item">
-            <i class="fa-solid fa-book-open"></i>
-            <h3>Manage Theory</h3>
-            <p>Add new lessons, upload files and maintain content quality.</p>
-            <a href="theory">Manage →</a>
+        <!-- Overlay -->
+        <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <h3><i class="fa-solid fa-user-shield"></i> Admin</h3>
+
+            <a href="dashboard.jsp" class="active">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="vocabulary">
+                <i class="fa-solid fa-book"></i> Vocabulary
+            </a>
+            <a href="theory">
+                <i class="fa-solid fa-book-open"></i> Theory
+            </a>
+            <a href="#">
+                <i class="fa-solid fa-pen"></i> Exercise
+            </a>
+            <a href="#">
+                <i class="fa-solid fa-chart-column"></i> Result
+            </a>
+            <a href="../logout">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
         </div>
 
-        <div class="card-item">
-            <i class="fa-solid fa-pen"></i>
-            <h3>Manage Exercises</h3>
-            <p>Create exercises and monitor student performance.</p>
-            <a href="#">Manage →</a>
+        <!-- Content -->
+        <div class="content">
+            <div class="hero">
+                <h2><i class="fa-solid fa-crown"></i> Welcome, Admin ${sessionScope.user.username}</h2>
+                <p>Manage lessons, control content and keep the system running smoothly.</p>
+            </div>
+
+            <div class="cards">
+                <div class="card-item">
+                    <i class="fa-solid fa-book"></i>
+                    <h3>Manage Vocabulary</h3>
+                    <p>Create, edit and organize vocabulary topics efficiently.</p>
+                    <a href="vocabulary">Manage →</a>
+                </div>
+
+                <div class="card-item">
+                    <i class="fa-solid fa-book-open"></i>
+                    <h3>Manage Theory</h3>
+                    <p>Add new lessons, upload files and maintain content quality.</p>
+                    <a href="theory">Manage →</a>
+                </div>
+
+                <div class="card-item">
+                    <i class="fa-solid fa-pen"></i>
+                    <h3>Manage Exercises</h3>
+                    <p>Create exercises and monitor student performance.</p>
+                    <a href="#">Manage →</a>
+                </div>
+            </div>
         </div>
 
-    </div>
+        <script>
+            function toggleSidebar() {
+                document.getElementById("sidebar").classList.toggle("open");
+                document.getElementById("overlay").classList.toggle("show");
+            }
+        </script>
 
-</div>
-
-</body>
+    </body>
 </html>

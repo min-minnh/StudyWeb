@@ -13,228 +13,320 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Lessons</title>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lessons</title>
 
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        <style>
-            body{
-                margin:0;
-                font-family:'Segoe UI',Arial,sans-serif;
-                display:flex;
-                height:100vh;
-                background:#f0f7ff;
-            }
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
 
-            /* SIDEBAR */
-            .sidebar{
-                width:240px;
-                background:linear-gradient(180deg,#93c5fd,#60a5fa);
-                color:white;
-                padding-top:25px;
-            }
+body{
+    font-family:'Segoe UI',Arial,sans-serif;
+    background:#f0f7ff;
+    display:flex;
+    min-height:100vh;
+}
 
-            .sidebar h3{
-                text-align:center;
-                margin-bottom:35px;
-                font-weight:700;
-            }
+/* ========== SIDEBAR ========== */
+.sidebar{
+    width:240px;
+    min-height:100vh;
+    background:linear-gradient(180deg,#93c5fd,#60a5fa);
+    color:white;
+    padding-top:25px;
+    flex-shrink:0;
+    position:fixed;
+    top:0; left:0;
+    height:100%;
+    overflow-y:auto;
+    z-index:200;
+    transition:transform 0.3s;
+}
 
-            .sidebar a{
-                display:flex;
-                align-items:center;
-                gap:12px;
-                padding:14px 22px;
-                color:white;
-                text-decoration:none;
-                border-radius:8px;
-                margin:4px 12px;
-                transition:0.3s;
-            }
+.sidebar h3{
+    text-align:center;
+    margin-bottom:35px;
+    font-weight:700;
+    font-size:18px;
+}
 
-            .sidebar a:hover{
-                background:rgba(255,255,255,0.25);
-                transform:translateX(6px);
-            }
+.sidebar a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 22px;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+    margin:4px 12px;
+    transition:0.3s;
+    font-size:15px;
+}
 
-            .active{
-                background:rgba(255,255,255,0.35);
-            }
+.sidebar a:hover{
+    background:rgba(255,255,255,0.25);
+    transform:translateX(6px);
+}
 
-            /* CONTENT */
-            .content{
-                flex:1;
-                padding:50px;
-                overflow-y:auto;
-            }
+.active{background:rgba(255,255,255,0.35);}
 
-            /* BACK BUTTON */
-            .back-link{
-                display:inline-block;
-                padding:8px 18px;
-                border-radius:25px;
-                background:#dbeafe;
-                color:#1e3a8a;
-                font-weight:600;
-                text-decoration:none;
-                margin-bottom:30px;
-                transition:0.3s;
-            }
+/* ========== TOPBAR ========== */
+.topbar{
+    display:none;
+    position:fixed;
+    top:0; left:0; right:0;
+    height:56px;
+    background:linear-gradient(90deg,#60a5fa,#93c5fd);
+    color:white;
+    align-items:center;
+    padding:0 16px;
+    gap:14px;
+    z-index:300;
+}
 
-            .back-link:hover{
-                background:#bfdbfe;
-            }
+.topbar span{font-weight:700;font-size:17px;}
 
-            /* HEADER */
-            .page-header{
-                margin-bottom:40px;
-            }
+.menu-btn{
+    background:none;
+    border:none;
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+    padding:4px 8px;
+}
 
-            .page-header h2{
-                margin:0;
-                font-size:28px;
-                color:#1e3a8a;
-            }
+.overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.4);
+    z-index:150;
+}
+.overlay.show{display:block;}
 
-            /* LESSON CARD */
-            .lesson-card{
-                background:white;
-                padding:45px;
-                border-radius:30px;
-                box-shadow:0 25px 50px rgba(59,130,246,0.15);
-                margin-bottom:45px;
-                line-height:1.8;
-                position:relative;
-                overflow:hidden;
-            }
+/* ========== CONTENT ========== */
+.content{
+    flex:1;
+    margin-left:240px;
+    padding:40px;
+    overflow-y:auto;
+}
 
-            .lesson-card::after{
-                content:"";
-                position:absolute;
-                width:140px;
-                height:140px;
-                background:rgba(59,130,246,0.08);
-                border-radius:50%;
-                top:-50px;
-                right:-50px;
-            }
+.back-link{
+    display:inline-block;
+    padding:8px 18px;
+    border-radius:25px;
+    background:#dbeafe;
+    color:#1e3a8a;
+    font-weight:600;
+    text-decoration:none;
+    margin-bottom:25px;
+    transition:0.3s;
+    font-size:14px;
+}
 
-            .lesson-card h3{
-                text-align:center;
-                font-size:30px;
-                color:#1e40af;
-                margin-bottom:25px;
-            }
+.back-link:hover{background:#bfdbfe;}
 
-            .lesson-card div{
-                color:#334155;
-                font-size:16px;
-            }
+.page-header{
+    margin-bottom:28px;
+}
 
-            /* PDF VIEWER */
-            .pdf-viewer{
-                margin-top:35px;
-                border-radius:25px;
-                overflow:hidden;
-                box-shadow:0 20px 45px rgba(0,0,0,0.12);
-            }
+.page-header h2{
+    font-size:clamp(20px,3vw,28px);
+    color:#1e3a8a;
+}
 
-            /* EMPTY */
-            .empty{
-                background:white;
-                padding:50px;
-                border-radius:30px;
-                text-align:center;
-                box-shadow:0 20px 40px rgba(0,0,0,0.08);
-                color:#64748b;
-            }
-        </style>
-    </head>
+/* ========== LESSON CARD ========== */
+.lesson-card{
+    background:white;
+    padding:clamp(20px,4vw,40px);
+    border-radius:24px;
+    box-shadow:0 15px 40px rgba(59,130,246,0.12);
+    margin-bottom:30px;
+    line-height:1.8;
+    position:relative;
+    overflow:hidden;
+}
 
-    <body>
+.lesson-card::after{
+    content:"";
+    position:absolute;
+    width:120px; height:120px;
+    background:rgba(59,130,246,0.07);
+    border-radius:50%;
+    top:-40px; right:-40px;
+}
 
-        <div class="sidebar">
-            <h3><i class="fa-solid fa-user-graduate"></i> Student</h3>
+.lesson-card h3{
+    font-size:clamp(18px,3vw,24px);
+    color:#1e40af;
+    margin-bottom:18px;
+    text-align:center;
+}
 
-            <a href="dashboard.jsp">
-                <i class="fa-solid fa-house"></i> Dashboard
-            </a>
+.lesson-content{
+    color:#334155;
+    font-size:clamp(14px,2vw,16px);
+    line-height:1.8;
+}
 
-            <a href="vocabulary">
-                <i class="fa-solid fa-book"></i> Vocabulary
-            </a>
+/* PDF Desktop */
+.pdf-desktop{
+    margin-top:25px;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 15px 35px rgba(0,0,0,0.1);
+}
 
-            <a href="theory" class="active">
-                <i class="fa-solid fa-book-open"></i> Theory
-            </a>
+.pdf-desktop iframe{
+    width:100%;
+    height:650px;
+    border:none;
+    display:block;
+}
 
-            <a href="../logout">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
+/* PDF Mobile - link thay thế */
+.pdf-mobile{
+    display:none;
+    margin-top:20px;
+}
+
+.pdf-mobile a{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:13px 20px;
+    background:#dbeafe;
+    color:#1e3a8a;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:600;
+    font-size:15px;
+    transition:0.2s;
+}
+
+.pdf-mobile a:hover{background:#bfdbfe;}
+
+/* ========== EMPTY ========== */
+.empty{
+    background:white;
+    padding:50px 30px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.07);
+    color:#64748b;
+}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:768px){
+    .topbar{display:flex;}
+
+    .sidebar{
+        transform:translateX(-100%);
+        padding-top:70px;
+    }
+
+    .sidebar.open{transform:translateX(0);}
+
+    .content{
+        margin-left:0;
+        padding:75px 16px 30px;
+    }
+
+    /* Ẩn iframe, hiện link trên mobile */
+    .pdf-desktop{display:none;}
+    .pdf-mobile{display:block;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Topbar mobile -->
+<div class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    <span><i class="fa-solid fa-book-open"></i> Lessons</span>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <h3><i class="fa-solid fa-user-graduate"></i> Student</h3>
+    <a href="dashboard.jsp"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="vocabulary"><i class="fa-solid fa-book"></i> Vocabulary</a>
+    <a href="theory" class="active"><i class="fa-solid fa-book-open"></i> Theory</a>
+    <a href="../logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</div>
+
+<!-- Content -->
+<div class="content">
+
+    <a class="back-link" href="theory">
+        <i class="fa-solid fa-arrow-left"></i> Back to Topics
+    </a>
+
+    <div class="page-header">
+        <h2><i class="fa-solid fa-book-open"></i> Lessons</h2>
+    </div>
+
+    <%
+    List<Theory> list = (List<Theory>) request.getAttribute("list");
+    if (list != null && !list.isEmpty()) {
+        for (Theory t : list) {
+            String fileUrl = (t.getFilePath() != null && !t.getFilePath().trim().equals(""))
+                ? request.getContextPath() + "/view-file?name=" + t.getFilePath()
+                : null;
+    %>
+
+    <div class="lesson-card">
+        <h3><%= t.getTitle() %></h3>
+        <div class="lesson-content"><%= t.getContent() %></div>
+
+        <% if (fileUrl != null) { %>
+
+        <!-- Desktop: iframe -->
+        <div class="pdf-desktop">
+            <iframe src="<%= fileUrl %>"></iframe>
+        </div>
+
+        <!-- Mobile: link -->
+        <div class="pdf-mobile">
+            <a href="<%= fileUrl %>" target="_blank">
+                <i class="fa-solid fa-file-pdf"></i> View PDF Document
             </a>
         </div>
 
-        <div class="content">
+        <% } %>
+    </div>
 
-            <a class="back-link" href="theory">
-                <i class="fa-solid fa-arrow-left"></i> Back to Topics
-            </a>
+    <%
+        }
+    } else {
+    %>
 
-            <div class="page-header">
-                <h2><i class="fa-solid fa-book-open"></i> Lessons</h2>
-            </div>
+    <div class="empty">
+        <i class="fa-regular fa-folder-open" style="font-size:30px;margin-bottom:12px;display:block;"></i>
+        <p>No lessons available yet.</p>
+    </div>
 
-            <%
-                List<Theory> list = (List<Theory>) request.getAttribute("list");
+    <% } %>
 
-                if (list != null && !list.isEmpty()) {
+</div>
 
-                    for (Theory t : list) {
-            %>
+<script>
+function toggleSidebar(){
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlay").classList.toggle("show");
+}
+</script>
 
-            <div class="lesson-card">
-
-                <h3><%= t.getTitle()%></h3>
-
-                <div>
-                    <%= t.getContent()%>
-                </div>
-
-                <%
-                    if (t.getFilePath() != null && !t.getFilePath().trim().equals("")) {
-                %>
-
-                <div class="pdf-viewer">
-                    <iframe
-                        src="<%= request.getContextPath()%>/view-file?name=<%= t.getFilePath()%>"
-                        style="width:100%; height:700px; border:none;">
-                    </iframe>
-                </div>
-
-                <%
-                    }
-                %>
-
-            </div>
-
-            <%
-                }
-
-            } else {
-            %>
-
-            <div class="empty">
-                <i class="fa-regular fa-folder-open" style="font-size:30px;margin-bottom:15px;"></i>
-                <p>No lessons available yet.</p>
-            </div>
-
-            <%
-                }
-            %>
-
-        </div>
-
-    </body>
+</body>
 </html>

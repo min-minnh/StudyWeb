@@ -24,7 +24,7 @@ import java.util.List;
 public class AdminTheoryServlet extends HttpServlet {
 
     // Local Windows
-    private static final String UPLOAD_PATH = "C:/uploads";
+    private static final String UPLOAD_PATH = "/home/uploads";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
