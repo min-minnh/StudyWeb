@@ -1,18 +1,6 @@
 steps:
 # =========================
-# STEP 1: BUILD WAR FROM SOURCE
-# =========================
-- name: 'ubuntu'
-  entrypoint: 'bash'
-  args:
-    - '-c'
-    - |
-      apt-get update -y
-      apt-get install -y ant default-jdk
-      ant -f build.xml dist
-
-# =========================
-# STEP 2: COPY WAR TO VM
+# STEP 1: COPY WAR TO VM
 # =========================
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
@@ -23,7 +11,7 @@ steps:
     - --zone=asia-southeast1-a
 
 # =========================
-# STEP 3: DEPLOY & RESTART TOMCAT
+# STEP 2: DEPLOY & RESTART TOMCAT
 # =========================
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
