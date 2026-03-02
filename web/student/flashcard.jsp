@@ -73,7 +73,6 @@ body{
     font-weight:600;
 }
 
-/* Progress bar */
 .progress-bar-wrap{
     width:min(500px, 85vw);
     height:6px;
@@ -108,7 +107,6 @@ body{
     transform:rotateY(180deg);
 }
 
-/* Swipe animation */
 .card.swipe-left{
     animation:swipeLeft 0.3s forwards;
 }
@@ -211,19 +209,6 @@ button:hover{background:#2563eb;}
     margin:0 2px;
 }
 
-/* Swipe indicator */
-.swipe-hint{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    font-size:40px;
-    opacity:0;
-    transition:opacity 0.2s;
-    pointer-events:none;
-}
-.swipe-hint.left{right:20px;}
-.swipe-hint.right{left:20px;}
-
 @media(max-width:480px){
     .hint-keys{display:none;}
     .back-btn a{font-size:12px;padding:6px 12px;}
@@ -244,10 +229,11 @@ button:hover{background:#2563eb;}
 </div>
 
 <div class="card-container">
-    <div class="card" id="card" onclick="flipCard()">
+    <!-- Đã xóa onclick khỏi đây -->
+    <div class="card" id="card">
         <div class="card-face front" id="front">
             <%= list.get(0).getWord() %>
-            <div class="hint">Click to flip</div>
+            <div class="hint">Tap to flip</div>
         </div>
         <div class="card-face card-back" id="back">
             <div class="meaning"><%= list.get(0).getMeaning() %></div>
@@ -284,7 +270,6 @@ const progressEl  = document.getElementById("progress");
 const progressBar = document.getElementById("progressBar");
 
 function updateCard(direction){
-    // Swipe animation
     if(direction){
         card.classList.add(direction === 'next' ? 'swipe-left' : 'swipe-right');
         setTimeout(()=>{
@@ -298,7 +283,7 @@ function updateCard(direction){
 
 function setContent(){
     const w = words[index];
-    frontEl.innerHTML = w.word + '<div class="hint">Click / Space to flip</div>';
+    frontEl.innerHTML = w.word + '<div class="hint">Tap to flip</div>';
     backEl.innerHTML  = '<div class="meaning">'+w.meaning+'</div><div class="example">'+w.example+'</div>';
     progressEl.innerText = (index+1) + " / " + words.length;
     progressBar.style.width = ((index+1)/words.length*100) + "%";
@@ -325,27 +310,33 @@ document.addEventListener("keydown", e => {
     else if(e.key === " "){ e.preventDefault(); flipCard(); }
 });
 
-// 👆 Touch swipe
+// 👆 Click chuột (desktop)
+card.addEventListener("click", flipCard);
+
+// 👆 Touch swipe + tap (mobile)
 let touchStartX = 0;
 let touchStartY = 0;
 
 card.addEventListener("touchstart", e => {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
-}, {passive:true});
+}, {passive: true});
 
 card.addEventListener("touchend", e => {
+    e.preventDefault(); // chặn click event sinh ra sau touch
+
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
 
-    // Chỉ xử lý swipe ngang, bỏ qua scroll dọc
     if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50){
+        // Swipe ngang
         if(dx < 0) next();
         else prev();
-    } else if(Math.abs(dx) < 10 && Math.abs(dy) < 10){
-        flipCard(); // tap nhẹ = lật
+    } else if(Math.abs(dx) < 15 && Math.abs(dy) < 15){
+        // Tap nhẹ = lật thẻ
+        flipCard();
     }
-});
+}, {passive: false});
 </script>
 
 </body>
